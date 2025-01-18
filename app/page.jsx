@@ -58,6 +58,8 @@ const Game = () => {
     setVegetables([]);
   };
 
+  const isGameComplete = items.length === 0 && fruits.length + vegetables.length === initialItems.length;
+
   if (!isMounted) {
     // Render empty content during server-side rendering
     return null;
@@ -68,37 +70,56 @@ const Game = () => {
       <DndContext onDragEnd={handleDragEnd}>
         <div className="flex flex-col items-center p-6 bg-black text-white min-h-screen md:flex md:justify-center md:items-center">
           <h1 className="text-2xl font-bold mb-6 text-center">Fruit & Vegetable Sorting Game</h1>
-          <div className="flex flex-col md:flex-row justify-center gap-6 w-full max-w-4xl relative -z-2 mb-8">
-            <Droppable id="fruit-container" label="Fruits">
-              {fruits.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-2 bg-gradient-to-b from-green-300 to-green-500 text-white rounded shadow-md my-1"
-                >
-                  {item.label}
-                </div>
-              ))}
-            </Droppable>
-            <Droppable id="vegetable-container" label="Vegetables">
-              {vegetables.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-2 bg-gradient-to-b from-[#4ECFFB] to-[#6A84FD] rounded shadow-md my-1"
-                >
-                  {item.label}
-                </div>
-              ))}
-            </Droppable>
+
+          {isGameComplete ? (
+            <div className="text-center text-green-500 text-2xl font-bold flex flex-col items-center gap-2 w-full h-[calc(100vh_-_3.75rem)] justify-center">
+              <span>You completed this game! 🎉</span>
+              <div className="reset-button flex w-full items-center px-4 justify-center">
+            <button
+              onClick={resetGame}
+              className="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 flex justify-center items-center gap-3 z-[2]"
+            >
+              <GrPowerReset />
+              <span>Reset Game</span>
+            </button>
           </div>
-          <div className="mb-4 flex flex-wrap justify-center">
-            {items.map((item) => (
-              <Draggable key={item.id} id={item.id} label={item.label} />
-            ))}
-          </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col md:flex-row justify-center gap-6 w-full max-w-4xl relative -z-2 mb-8">
+                <Droppable id="fruit-container" label="Fruits">
+                  {fruits.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-2 bg-green-400 text-white rounded shadow-md my-1"
+                    >
+                      {item.label}
+                    </div>
+                  ))}
+                </Droppable>
+                <Droppable id="vegetable-container" label="Vegetables">
+                  {vegetables.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-2 bg-orange-300 rounded shadow-md my-1"
+                    >
+                      {item.label}
+                    </div>
+                  ))}
+                </Droppable>
+              </div>
+              <div className="mb-4 flex flex-wrap justify-center">
+                {items.map((item) => (
+                  <Draggable key={item.id} id={item.id} label={item.label} />
+                ))}
+              </div>
+            </>
+          )}
+
           <div className="reset-button fixed bottom-16 right-1 sm:static flex w-full items-center justify-end px-4 sm:justify-center">
             <button
               onClick={resetGame}
-              className="md:mt-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 flex justify-center items-center gap-3"
+              className="md:mt-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 flex justify-center items-center gap-3 z-[1]"
             >
               <GrPowerReset />
               <span className="hidden sm:inline-block">Reset Game</span>
@@ -111,3 +132,4 @@ const Game = () => {
 };
 
 export default Game;
+
